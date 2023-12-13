@@ -1,29 +1,43 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven 3.6.3'
+        nodejs 'Node.js' // Assuming 'Node.js' is the tool installation name for Node.js in Jenkins
     }
     stages {
-        stage('Build Maven') {
+        stage('Checkout SCM') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/phebekeerthana/DEMOjenkins']])
-                sh 'mvn clean install'
+                checkout scm
+            }
+        }
+        stage('Build Angular') {
+            steps {
+                script {
+                    // Install project dependencies using npm
+                    sh 'npm install'
+
+                    // Build the Angular application
+                    sh 'npm run build'
+                }
             }
         }
         stage('Build Docker image') {
             steps {
                 script {
-                    sh 'docker build -t chennelikeerthana/jenkins .'
+                    // Build Docker image
+                    sh 'docker build -t chennelikeerthana/angular-app .'
                 }
             }
         }
-        stage('push image to Hub') {
+        stage('Push image to Hub') {
             steps {
                 script {
+                    // Docker login
                     withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                        sh 'docker login -u chennelikeerthana -p ${dockerhub}'
+                        sh "docker login -u chennelikeerthana -p ${dockerhub}"
                     }
-                    sh 'docker push chennelikeerthana/jenkins'
+
+                    // Docker push
+                    sh 'docker push chennelikeerthana/angular-app'
                 }
             }
         }
