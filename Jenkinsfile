@@ -1,40 +1,33 @@
 pipeline {
     agent any
-
-    environment {
-        DOCKER_IMAGE = 'my-angulae-app'
-        DOCKER_REGISTRY_URL = 'https://hub.docker.com/repository/docker/chennelikeerthana/angular/general'  // Docker Hub repository URL
-        DOCKER_REGISTRY_CREDENTIALS = 'docker-hub-credentials'  // ID of Docker Hub credentials in Jenkins
+    tools{
+        maven 'apache-maven-3.9.5'
     }
-
-    stages {
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
-                }
+    stages{
+        stage('Build Maven'){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/phebekeerthana/DEMOjenkins']])
+                sh 'mvn clean install'
             }
         }
-
-        stage('Push to Docker Registry') {
-            steps {
-                script {
-                    docker.withRegistry("${DOCKER_REGISTRY_URL}", "${DOCKER_REGISTRY_CREDENTIALS}") {
-                        docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push()
-                    }
+        stage('Build Docker image'){
+            steps{
+                script{
+                    sh 'Docker build -t chennelikeerthana/jenkins .'
                 }
+
             }
         }
-
-        // Additional stages for deployment, testing, etc.
-    }
-
-    post {
-        success {
-            echo 'Pipeline succeeded! Image built and pushed.'
-        }
-        failure {
-            echo 'Pipeline failed. Check the logs for errors.'
-        }
-    }
+        stage('push image to Hub'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
+                    sh 'docker login -u chennelikeerthana -p ${dockerhub}'
 }
+                    sh 'docker push chennelikeerthana/jenkins'
+                }
+            }
+        }
+    }
+
+

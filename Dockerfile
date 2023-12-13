@@ -1,5 +1,5 @@
 # Use a specific Node.js version as a base image
-FROM node:18.13 as builder
+FROM node:18.13  as builder
 
 # Set the working directory
 WORKDIR /app
