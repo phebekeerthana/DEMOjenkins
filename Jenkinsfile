@@ -13,10 +13,10 @@ pipeline {
             steps {
                 script {
                     // Install project dependencies using npm
-                    sh 'npm install'
+                    bat 'npm install'
 
                     // Build the Angular application
-                    sh 'npm run build'
+                    bat 'npm run build'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker build -t chennelikeerthana/angular-app .'
+                    bat 'docker build -t chennelikeerthana/angular-app .'
                 }
             }
         }
@@ -33,11 +33,11 @@ pipeline {
                 script {
                     // Docker login
                     withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                        sh "docker login -u chennelikeerthana -p ${dockerhub}"
+                        bat "docker login -u chennelikeerthana -p ${dockerhub}"
                     }
 
                     // Docker push
-                    sh 'docker push chennelikeerthana/angular-app'
+                    bat 'docker push chennelikeerthana/angular-app'
                 }
             }
         }
