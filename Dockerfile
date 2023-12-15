@@ -17,7 +17,7 @@ COPY . .
 RUN ng build --prod
 
 # Expose the port the app runs on
-EXPOSE 4200
+EXPOSE 80
 
 # Command to run the application
 CMD ["npm", "start"]
