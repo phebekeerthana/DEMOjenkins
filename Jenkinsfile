@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'Node.js' // Assuming 'Node.js' is the tool installation name for Node.js in Jenkins
+        nodejs 'NodeJS' // Assuming 'Node.js' is the tool installation name for Node.js in Jenkins
     }
     stages {
         stage('Checkout SCM') {
