@@ -1,23 +1,14 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
-
-# Set the working directory
+# Build Stage
+FROM node:18 AS build
 WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
-
-# Install app dependencies
 RUN npm install
-
-# Copy the application code
 COPY . .
-
-# Build the Angular app
 RUN npm run build -- --configuration=production
 
-# Expose the port the app runs on
+# Production Stage
+FROM nginx:alpine
+COPY --from=build /usr/src/jenkins/dist /usr/share/nginx/html
 EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-# Command to run the application
-CMD ["npm", "start"]
