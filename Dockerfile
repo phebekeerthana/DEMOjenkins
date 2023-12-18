@@ -1,24 +1,18 @@
-FROM node:18
+FROM node:latest as builder
 
-# Set the working directory
-WORKDIR /usr/src/app
+RUN mkdir /app
+WORKDIR  /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-RUN npm update -g npm
-
-# Install app dependencies
-RUN npm install
-
-# Copy the application code
 COPY . .
-RUN ls -al
-# Build the Angular app
-RUN npm run build -- --configuration=production
+ RUN npm install
+ RUN npm run build
 
-# Expose the port the app runs on
+
+
+
+
+
+FROM nginx:latest
+
+COPY --from=builder /app/dist/jenkins /usr/share/nginx/html
 EXPOSE 80
-
-# Command to run the application
-CMD ["npm", "start"]
