@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    bat 'docker build -t chennelikeerthana/angular-app .'
+                    bat 'docker build -t chennelikeerthana/backend:tagname .'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
                     }
 
                     // Docker push
-                    bat 'docker push chennelikeerthana/angular-app'
+                    bat 'docker push  chennelikeerthana/backend:latest'
                 }
             }
         }
