@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     // Docker login
-                     withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]){
+                       withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
                         bat "docker login -u chennelikeerthana -p ${dockerhubpwd}"
                     }
 
