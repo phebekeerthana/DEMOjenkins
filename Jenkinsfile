@@ -23,23 +23,32 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                    // Build Docker image
-                    bat 'docker build -t chennelikeerthana/backend:tagname .'
+                    // Build Docker image with a dynamic tag (e.g., build number)
+                    bat "docker build -t chennelikeerthana/backend:${BUILD_NUMBER} ."
                 }
             }
         }
         stage('Push image to Hub') {
             steps {
                 script {
-                    // Docker login
-                       withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
+                    // Docker login using credentials
+                    withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
                         bat "docker login -u chennelikeerthana -p ${dockerhubpwd}"
                     }
 
-                    // Docker push
-                    bat 'docker push  chennelikeerthana/backend:latest'
+                    // Push Docker image with a dynamic tag
+                    bat "docker push chennelikeerthana/backend:${BUILD_NUMBER}"
                 }
             }
+        }
+    }
+
+    post {
+        failure {
+            // Send email notification in case of build failure
+            emailext body: 'Build failed. Please check the Jenkins build logs for details.',
+                    subject: 'Build Failure',
+                    to: 'chennelikeerthana@gmail.com'
         }
     }
 }
