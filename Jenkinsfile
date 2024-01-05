@@ -6,16 +6,17 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
+                echo "Checking out source code from SCM"
                 checkout scm
             }
         }
         stage('Build Angular') {
             steps {
                 script {
-                    // Install project dependencies using npm
+                    echo "Installing project dependencies using npm"
                     bat 'npm install'
 
-                    // Build the Angular application
+                    echo "Building the Angular application"
                     bat 'npm run build'
                 }
             }
@@ -23,7 +24,7 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                    // Build Docker image with a dynamic tag (e.g., build number)
+                    echo "Building Docker image with a dynamic tag (Build Number: ${BUILD_NUMBER})"
                     bat "docker build -t chennelikeerthana/backend:${BUILD_NUMBER} ."
                 }
             }
@@ -31,12 +32,12 @@ pipeline {
         stage('Push image to Hub') {
             steps {
                 script {
-                    // Docker login using credentials
+                    echo "Logging into Docker Hub using credentials"
                     withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
                         bat "docker login -u chennelikeerthana -p ${dockerhubpwd}"
                     }
 
-                    // Push Docker image with a dynamic tag
+                    echo "Pushing Docker image to Docker Hub with dynamic tag"
                     bat "docker push chennelikeerthana/backend:${BUILD_NUMBER}"
                 }
             }
