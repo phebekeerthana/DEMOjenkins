@@ -6,17 +6,16 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                echo "Checking out source code from SCM"
                 checkout scm
             }
         }
         stage('Build Angular') {
             steps {
                 script {
-                    echo "Installing project dependencies using npm"
+                    // Install project dependencies using npm
                     bat 'npm install'
 
-                    echo "Building the Angular application"
+                    // Build the Angular application
                     bat 'npm run build'
                 }
             }
@@ -24,32 +23,23 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                    echo "Building Docker image with a dynamic tag (Build Number: ${BUILD_NUMBER})"
-                    bat "docker build -t chennelikeerthana/backend:${BUILD_NUMBER} ."
+                    // Build Docker image
+                    bat 'docker build -t chennelikeerthana/backend:tagname .'
                 }
             }
         }
         stage('Push image to Hub') {
             steps {
                 script {
-                    echo "Logging into Docker Hub using credentials"
-                    withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
+                    // Docker login
+                       withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
                         bat "docker login -u chennelikeerthana -p ${dockerhubpwd}"
                     }
 
-                    echo "Pushing Docker image to Docker Hub with dynamic tag"
-                    bat "docker push chennelikeerthana/backend:${BUILD_NUMBER}"
+                    // Docker push
+                    bat 'docker push  chennelikeerthana/backend:latest'
                 }
             }
-        }
-    }
-
-    post {
-        failure {
-            // Send email notification in case of build failure
-            emailext body: 'Build failed. Please check the Jenkins build logs for details.',
-                    subject: 'Build Failure',
-                    to: 'chennelikeerthana@gmail.com'
         }
     }
 }
