@@ -28,5 +28,18 @@ pipeline {
                 }
             }
         }
+        stage('Push image to Hub') {
+            steps {
+                script {
+                    // Docker login
+                       withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerhubpwd')]) {
+                        bat "docker login -u chennelikeerthana -p ${dockerhubpwd}"
+                    }
+
+                    // Docker push
+                    bat 'docker push  chennelikeerthana/backend:latest'
+                }
+            }
+        }
     }
-}       
+}      
