@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     // Docker login
-                    bat 'docker login'
+                    bat 'docker login -u chennelikeerthana -p Pinky@2431'
                     // Docker push
                     bat 'docker push  chennelikeerthana/backend:latest'
                 }
