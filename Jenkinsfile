@@ -89,8 +89,8 @@ pipeline {
             steps {
                 script {
                     // Docker login
-                    withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'dockerhubpwd')]) {
-                        bat "docker login -u ${DOCKER_HUB_CREDENTIALS} -p \${dockerhubpwd}"
+                    withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'Pinky@2431')]) {
+                        bat "docker login -u ${DOCKER_HUB_CREDENTIALS} -p \${Pinky@2431}"
                     }
 
                     // Docker push
