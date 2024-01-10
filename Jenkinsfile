@@ -33,13 +33,14 @@ pipeline {
                 script {
                     // Docker login
                     withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerpwd')]) {
-                    bat 'docker login -u chennelikeerthana -p ${dockerpwd}'
+                        bat 'docker login -u chennelikeerthana -p ${dockerpwd}'
                     }
                     // Docker push
-                    bat 'docker push  chennelikeerthana/backend:latest'
+                    bat 'docker push chennelikeerthana/backend:latest'
                 }
             }
         }
-    }            
+    }
 }
+
 
