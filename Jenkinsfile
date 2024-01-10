@@ -32,7 +32,8 @@ pipeline {
             steps {
                 script {
                     // Docker login
-                    bat 'docker login -u chennelikeerthana -p Pinky@2431'
+                    withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerpwd')]) {
+                    bat 'docker login -u chennelikeerthana -p ${dockerpwd}'
                     // Docker push
                     bat 'docker push  chennelikeerthana/backend:latest'
                 }
