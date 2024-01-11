@@ -2,7 +2,6 @@ pipeline {
     agent any
     tools {
         nodejs 'NodeJS' // Assuming 'Node.js' is the tool installation name for Node.js in Jenkins
-        dockerTool 'DockerTool'
     }
     stages {
         stage('Checkout SCM') {
@@ -25,7 +24,18 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
+                    echo 'Running Docker Build Command'
                     bat 'docker build -t chennelikeerthana/backend:tagname .'
+                }
+            }
+        }
+        stage('Debug Docker') {
+            steps {
+                script {
+                    // Debugging info about Docker environment
+                    echo 'Running Docker Environment Info'
+                    bat 'docker version'
+                    bat 'docker info'
                 }
             }
         }
@@ -34,9 +44,11 @@ pipeline {
                 script {
                     // Docker login
                     withCredentials([string(credentialsId: 'chennelikeerthana', variable: 'dockerpwd')]) {
+                        echo 'Running Docker Login Command'
                         bat 'docker login -u chennelikeerthana -p ${dockerpwd}'
                     }
                     // Docker push
+                    echo 'Running Docker Push Command'
                     bat 'docker push chennelikeerthana/backend:latest'
                 }
             }
