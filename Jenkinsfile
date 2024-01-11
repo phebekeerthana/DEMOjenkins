@@ -2,6 +2,12 @@ pipeline {
     agent any
     tools {
         nodejs 'NodeJS' // Assuming 'Node.js' is the tool installation name for Node.js in Jenkins
+
+    }
+     environment {
+        registryCredential = 'chennelikeerthana' // Credential ID for Docker Hub
+        imageName = 'chennelikeerthana/backend'
+        imageTag = 'latest'
     }
     stages {
         stage('Checkout SCM') {
