@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    bat 'docker build -t chennelikeerthana/backend:tagname .'
+                    bat 'docker build -t chennelikeerthana/devops:tagname .'
                 }
             }
         }
