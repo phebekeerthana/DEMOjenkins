@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                checkout scm
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/phebekeerthana/DEMOjenkins.git'
             }
         }
         stage('Build Angular') {
