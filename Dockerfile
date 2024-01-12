@@ -12,8 +12,7 @@ COPY . .
 
 
 
-FROM ngnix :latest
+FROM nginx:latest
 
-
-COPY  /app/dist/jenkins /usr/share/nginx/html/
+COPY --from=builder /app/dist/jenkins /usr/share/nginx/html
 EXPOSE 80
